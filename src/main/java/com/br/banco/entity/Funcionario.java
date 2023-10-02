@@ -1,8 +1,5 @@
 package com.br.banco.entity;
 
-<<<<<<< HEAD
-public class Funcionario {
-=======
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +24,4 @@ public class Funcionario {
     @JoinColumn(name = "contatos_id")
     private Contatos contatos;
 
->>>>>>> entidades
 }
