@@ -12,6 +12,7 @@ public class ClienteDto {
     public ClienteDto(){
     }
 
+    
     public ClienteDto(Long id, String cpf) {
         this.id = id;
         this.cpf = cpf;
