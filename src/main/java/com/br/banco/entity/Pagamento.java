@@ -20,4 +20,6 @@ public class Pagamento {
     private long id;
 
     private String tipo;
+
+    private double valor;
 }
