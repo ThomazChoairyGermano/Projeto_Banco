@@ -1,5 +1,6 @@
 package com.br.banco.service;
 
+import com.br.banco.dto.ClienteDto;
 import com.br.banco.entity.Cliente;
 import com.br.banco.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,12 @@ public class ClienteService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public ClienteDto findId(Long id) {
+        Cliente entity = repository.findById(id).get();
+        ClienteDto dto = new ClienteDto(entity);
+        return dto;
     }
 
 }

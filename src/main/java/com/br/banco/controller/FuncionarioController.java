@@ -1,5 +1,7 @@
 package com.br.banco.controller;
 
+import com.br.banco.dto.ClienteDto;
+import com.br.banco.dto.FuncionarioDto;
 import com.br.banco.entity.Funcionario;
 import com.br.banco.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,12 @@ public class FuncionarioController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+
+
+    @GetMapping(value = "/{id}")
+    public FuncionarioDto findId(@PathVariable Long id){
+        return service.findId(id);
     }
 
 

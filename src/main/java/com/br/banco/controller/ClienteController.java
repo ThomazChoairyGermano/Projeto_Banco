@@ -1,5 +1,6 @@
 package com.br.banco.controller;
 
+import com.br.banco.dto.ClienteDto;
 import com.br.banco.entity.Cliente;
 import com.br.banco.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/cliente")
@@ -56,6 +59,14 @@ public class ClienteController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
+    @GetMapping(value = "/{id}")
+    public ClienteDto findId(@PathVariable Long id){
+        return service.findId(id);
+    }
+
+
+
 
 
 }
