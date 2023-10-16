@@ -16,19 +16,19 @@ public class Aluguel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "veiculo_id")
     private Veiculo veiculo;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "pagamento_id")
     private Pagamento pagamento;
 }
