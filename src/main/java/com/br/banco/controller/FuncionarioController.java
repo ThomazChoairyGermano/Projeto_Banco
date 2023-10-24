@@ -1,6 +1,5 @@
 package com.br.banco.controller;
 
-import com.br.banco.dto.ClienteDto;
 import com.br.banco.dto.FuncionarioDto;
 import com.br.banco.entity.Funcionario;
 import com.br.banco.service.FuncionarioService;
@@ -17,40 +16,42 @@ import java.util.Optional;
 public class FuncionarioController {
 
     @Autowired
-    FuncionarioService service;
+    private FuncionarioService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Funcionario> findAll() {
-        return service.listaTodos();
+    public ResponseEntity<List<Funcionario>> findAll() {
+        List<Funcionario> funcionarios = service.listaTodos();
+        return ResponseEntity.ok(funcionarios);
     }
 
     @GetMapping("/listar-por-nome/{nome}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Funcionario> buscarNome(@PathVariable String nome) {
-        return service.listaPorNome(nome);
+    public ResponseEntity<List<Funcionario>> buscarNome(@PathVariable String nome) {
+        List<Funcionario> funcionarios = service.listaPorNome(nome);
+        return ResponseEntity.ok(funcionarios);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Funcionario> create(@RequestBody Funcionario funcionario) {
         Funcionario funcionarioCreated = service.create(funcionario);
-
-        return ResponseEntity.status(201).body(funcionarioCreated);
+        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCreated);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Funcionario> update(@RequestBody Funcionario funcionario) {
-        Funcionario funcionarioCreated = service.create(funcionario);
+    @PutMapping("/{id}")
+    public ResponseEntity<Funcionario> update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
+        Optional<Funcionario> updatedFuncionario = Optional.ofNullable(service.update(id, funcionario));
 
-        return ResponseEntity.status(201).body(funcionarioCreated);
+        if (updatedFuncionario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedFuncionario.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<Funcionario> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Funcionario> findById(@PathVariable Long id) {
+        Optional<Funcionario> funcionario = service.findById(id);
+        return funcionario.map(value -> ResponseEntity.ok(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -59,11 +60,10 @@ public class FuncionarioController {
         service.delete(id);
     }
 
-
-    @GetMapping(value = "/{id}")
-    public FuncionarioDto findId(@PathVariable Long id){
-        return service.findId(id);
+    @GetMapping(value = "/dto/{id}")
+    public ResponseEntity<FuncionarioDto> findId(@PathVariable Long id) {
+        Optional<FuncionarioDto> funcionarioDto = Optional.ofNullable(service.findId(id));
+        return funcionarioDto.map(value -> ResponseEntity.ok().body(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
 }

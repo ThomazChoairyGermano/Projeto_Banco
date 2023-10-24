@@ -30,9 +30,9 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfoMetaData() {
 
-        return new ApiInfoBuilder().title("Aluno Online")
+        return new ApiInfoBuilder().title("Locadora de carros")
                 .description("API Endpoint para teste")
-                .contact(new Contact("Dev-Team", "", ""))
+                .contact(new Contact("Dev-Team", "", "2022111510030@iesp.edu.br"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")

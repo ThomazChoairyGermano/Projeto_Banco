@@ -23,7 +23,7 @@ public class PagamentoService {
         return repository.save(pagamento);
     }
 
-    public Pagamento update(Pagamento pagamento) {
+    public Pagamento update(Long id, Pagamento pagamento) {
         return repository.save(pagamento);
     }
 

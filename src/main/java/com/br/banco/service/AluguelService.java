@@ -23,7 +23,7 @@ public class AluguelService {
         return repository.save(aluguel);
     }
 
-    public Aluguel update(Aluguel aluguel) {
+    public Aluguel update(Long id, Aluguel aluguel) {
         return repository.save(aluguel);
     }
 

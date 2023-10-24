@@ -23,7 +23,7 @@ public class VeiculoService {
         return repository.save(veiculo);
     }
 
-    public Veiculo update(Veiculo veiculo) {
+    public Veiculo update(Long id, Veiculo veiculo) {
         return repository.save(veiculo);
     }
 

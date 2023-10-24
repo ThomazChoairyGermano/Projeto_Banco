@@ -1,6 +1,6 @@
 package com.br.banco.controller;
 
-import com.br.banco.entity.Contatos;
+import com.br.banco.entity.Contato;
 import com.br.banco.service.ContatosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,34 +15,36 @@ import java.util.Optional;
 public class ContatosController {
 
     @Autowired
-    ContatosService service;
+    private ContatosService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Contatos> findAll() {
-        return service.listaTodos();
+    public ResponseEntity<List<Contato>> findAll() {
+        List<Contato> contatos = service.listaTodos();
+        return ResponseEntity.ok(contatos);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Contatos> create(@RequestBody Contatos contatos) {
-        Contatos contatosCreated = service.create(contatos);
-
-        return ResponseEntity.status(201).body(contatosCreated);
+    public ResponseEntity<Contato> create(@RequestBody Contato contatos) {
+        Contato contatosCreated = service.create(contatos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(contatosCreated);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Contatos> update(@RequestBody Contatos contatos) {
-        Contatos contatosCreated = service.create(contatos);
+    @PutMapping("/{id}")
+    public ResponseEntity<Contato> update(@PathVariable Long id, @RequestBody Contato contatos) {
+        Optional<Contato> updatedContatos = Optional.ofNullable(service.update(id, contatos));
 
-        return ResponseEntity.status(201).body(contatosCreated);
+        if (updatedContatos.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedContatos.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<Contatos> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Contato> findById(@PathVariable Long id) {
+        Optional<Contato> contatos = service.findById(id);
+        return contatos.map(value -> ResponseEntity.ok(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -50,5 +52,5 @@ public class ContatosController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
-
 }
+

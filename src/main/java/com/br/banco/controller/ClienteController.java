@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
@@ -21,13 +19,11 @@ public class ClienteController {
     ClienteService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
     public List<Cliente> findAll() {
         return service.listaTodos();
     }
 
     @GetMapping("/listar-por-nome/{nome}")
-    @ResponseStatus(HttpStatus.OK)
     public List<Cliente> buscarNome(@PathVariable String nome) {
         return service.listaPorNome(nome);
     }
@@ -41,17 +37,21 @@ public class ClienteController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
-        Cliente clienteCreated = service.create(cliente);
+        Cliente clienteUpdated = service.update(cliente);
 
-        return ResponseEntity.status(201).body(clienteCreated);
+        if (clienteUpdated != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(clienteUpdated);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<Cliente> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Cliente> findById(@PathVariable Long id) {
+        Optional<Cliente> cliente = service.findById(id);
+        return cliente.map(value -> ResponseEntity.ok().body(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -60,13 +60,12 @@ public class ClienteController {
         service.delete(id);
     }
 
-    @GetMapping(value = "/{id}")
-    public ClienteDto findId(@PathVariable Long id){
-        return service.findId(id);
+    @GetMapping(value = "/dto/{id}")
+    public ResponseEntity<ClienteDto> findId(@PathVariable Long id) {
+        Optional<ClienteDto> clienteDto = Optional.ofNullable(service.findId(id));
+        return clienteDto.map(value -> ResponseEntity.ok().body(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
-
-
-
 }
+
+

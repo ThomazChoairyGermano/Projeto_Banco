@@ -1,6 +1,6 @@
 package com.br.banco.service;
 
-import com.br.banco.entity.Contatos;
+import com.br.banco.entity.Contato;
 import com.br.banco.repository.ContatosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,24 +14,26 @@ public class ContatosService {
     @Autowired
     private ContatosRepository repository;
 
-    public List<Contatos> listaTodos(){
+    public List<Contato> listaTodos(){
         return repository.findAll();
     }
 
-    public Contatos create(Contatos contatos) {
+    public Contato create(Contato contatos) {
 
-        return repository.save(contatos);
+        Contato contato = null;
+        return repository.save(contato);
     }
 
-    public Contatos update(Contatos contatos) {
-        return repository.save(contatos);
+    public Contato update(Long id, Contato contatos) {
+        Contato contato = null;
+        return repository.save(contato);
     }
 
-    public List<Contatos> findAll() {
+    public List<Contato> findAll() {
         return repository.findAll();
     }
 
-    public Optional<Contatos> findById(Long id) {
+    public Optional<Contato> findById(Long id) {
         return repository.findById(id);
     }
 

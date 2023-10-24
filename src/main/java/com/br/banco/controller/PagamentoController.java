@@ -11,38 +11,40 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pagamennto")
+@RequestMapping("/pagamento")
 public class PagamentoController {
 
     @Autowired
-    PagamentoService service;
+    private PagamentoService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Pagamento> findAll() {
-        return service.listaTodos();
+    public ResponseEntity<List<Pagamento>> findAll() {
+        List<Pagamento> pagamentos = service.listaTodos();
+        return ResponseEntity.ok(pagamentos);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Pagamento> create(@RequestBody Pagamento pagamento) {
         Pagamento pagamentoCreated = service.create(pagamento);
-
-        return ResponseEntity.status(201).body(pagamentoCreated);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pagamentoCreated);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Pagamento> update(@RequestBody Pagamento pagamento) {
-        Pagamento pagamentoCreated = service.create(pagamento);
+    @PutMapping("/{id}")
+    public ResponseEntity<Pagamento> update(@PathVariable Long id, @RequestBody Pagamento pagamento) {
+        Optional<Pagamento> updatedPagamento = Optional.ofNullable(service.update(id, pagamento));
 
-        return ResponseEntity.status(201).body(pagamentoCreated);
+        if (updatedPagamento.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedPagamento.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<Pagamento> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Pagamento> findById(@PathVariable Long id) {
+        Optional<Pagamento> pagamento = service.findById(id);
+        return pagamento.map(value -> ResponseEntity.ok(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -50,5 +52,5 @@ public class PagamentoController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
-
 }
+

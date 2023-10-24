@@ -15,34 +15,36 @@ import java.util.Optional;
 public class VeiculoController {
 
     @Autowired
-    VeiculoService service;
+    private VeiculoService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Veiculo> findAll() {
-        return service.listaTodos();
+    public ResponseEntity<List<Veiculo>> findAll() {
+        List<Veiculo> veiculos = service.listaTodos();
+        return ResponseEntity.ok(veiculos);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Veiculo> create(@RequestBody Veiculo veiculo) {
         Veiculo veiculoCreated = service.create(veiculo);
-
-        return ResponseEntity.status(201).body(veiculoCreated);
+        return ResponseEntity.status(HttpStatus.CREATED).body(veiculoCreated);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Veiculo> update(@RequestBody Veiculo veiculo) {
-        Veiculo veiculoCreated = service.create(veiculo);
+    @PutMapping("/{id}")
+    public ResponseEntity<Veiculo> update(@PathVariable Long id, @RequestBody Veiculo veiculo) {
+        Optional<Veiculo> updatedVeiculo = Optional.ofNullable(service.update(id, veiculo));
 
-        return ResponseEntity.status(201).body(veiculoCreated);
+        if (updatedVeiculo.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedVeiculo.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<Veiculo> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Veiculo> findById(@PathVariable Long id) {
+        Optional<Veiculo> veiculo = service.findById(id);
+        return veiculo.map(value -> ResponseEntity.ok(value))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -50,5 +52,5 @@ public class VeiculoController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
-
 }
+
